@@ -1,10 +1,10 @@
 # terraform-guidelines
 
-A style guide for writing Terraform.
+## A style guide for writing Terraform by James Woolfenden
 
 This is a guide to writing Terraform to conform to Slalom London Style, it follows the Hashicorp guide to creating modules for the Terraform Registry <https://www.terraform.io/docs/registry/modules/publish.html> and their standard structure <https://www.terraform.io/docs/modules/index.html#standard-module-structure>.
 
-There are many successful ways of writing your tf, this is tried and field tested.
+There are many successful ways of writing your tf, this one is tried and field tested.
 
 ## Templates
 
@@ -54,7 +54,6 @@ total 19
 -rwxrwxrwx    1 root     root           239 Mar  7 11:02 outputs.tf
 -rwxrwxrwx    1 root     root           208 Apr 24 23:30 provider.tf
 -rwxrwxrwx    1 root     root           349 Mar  7 11:02 remote_state.tf
--rwxrwxrwx    1 root     root           148 Mar  7 11:02 setlatest.sh
 -rwxrwxrwx    1 root     root          1531 May 28 11:25 terraform.tfvars
 -rwxrwxrwx    1 root     root           618 May 28 11:20 variables.tf
 ```
@@ -65,8 +64,16 @@ Use a generator like tf-scaffold to automate template creation <https://github.c
 
 ## Modules
 
-You've written some TF and you about to duplicate its functionality, it's time to abstract a module. A module should be more than just one resource.  
-Modules should be treated like applications services with a seperate code repository for each module.
+You've written some TF and your about to duplicate its functionality, it's time to abstract a module. A module should be more than just one resource.  
+Modules should be treated like applications services with a separate code repository for each module.
+
+Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called exampleA.
+
+```bash
+examples/exampleA/
+```
+
+This is an example for AWS codecommit that conforms <https://github.com/JamesWoolfenden/terraform-aws-codecommit>
 
 ## Files
 
@@ -102,6 +109,13 @@ If your module comes from a registry, specify using the verision property, if it
 
 Using shiny things is great, what's not great is code that worked yesterday breaking because a plugin/provider changed. Specify the version in your **provider.tf** file.
 
+```terraform
+provider "aws" {
+  region  = "eu-west-1"
+  version = "2.15.0"
+}
+```
+
 ## State
 
 Using remote state is not optional, use a locking state bucket or use the free state management layer in Terraform Enterprise. The new free tier is worth a look.
@@ -121,11 +135,12 @@ Other options include using git-secrets, Husky or using Talisman.  Use and manda
 
 ## Configuration
 
-Convention over configuration is preffered.
+Convention over configuration is preferred.
 Use a data source over adding a configuration value.
 Set default values for your modules variables.
 Make resources optional with the count syntax.
 
 ## Tagging
 
-Implement a tegging scheme from the start, use a map type for extensibility.
+Implement a tagging scheme from the start, and use a map type for extensibility.
+
