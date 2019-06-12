@@ -8,7 +8,7 @@ There are many successful ways of writing your tf, this is tried and field teste
 
 ## Templates
 
-This us the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a root folder in the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
+This is the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a root folder in the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
 
 ```bash
 23043-5510:/mnt/c/aws-lexbot-handler# ls -l
@@ -80,7 +80,7 @@ You have a security group called for elastic search the resource is aws_security
 
 You have 2 choices with dependencies. Live on the bleeding edge, or fix your versions. I recommend being in control.
 
-### Fix the version of Terraform you use.
+### Fix the version of Terraform you use
 
 The whole team needs to use the same version of the tool until you decide as a team to update.  
 Create a file called **terraform.tf** in your template:
