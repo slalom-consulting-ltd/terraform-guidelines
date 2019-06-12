@@ -8,7 +8,7 @@ There are many successful ways of writing your tf, this one is tried and field t
 
 ## Templates
 
-This is the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a jimw folder in the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
+This is the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a folder in the root of the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
 
 ```bash
 23043-5510:/mnt/c/aws-lexbot-handler# ls -l
@@ -58,7 +58,7 @@ total 19
 -rwxrwxrwx    1 jimw     jimw           618 May 28 11:20 variables.tf
 ```
 
-There's a lot of files in here and some repetition that violates DRY principles, but with IAC, favour on being explict.
+There's a lot of files in here and some repetition that violates DRY principles, but with IAC, favour on being explicit.
 Each template is directly runnable using the Terraform CLI with no wrapper script required.
 Use a generator like tf-scaffold to automate template creation <https://github.com/JamesWoolfenden/tf-scaffold>
 
@@ -103,7 +103,7 @@ terraform {
 ### Fix the version of the modules you consume
 
 In your **module.tf** file set the version of the module. If you author modules make sure you tag successful module builds.
-If your module comes from a registry, specify using the verision property, if its only standard git use a tag reference in your source statement.
+If your module comes from a registry, specify using the version property, if its only standard git use a tag reference in your source statement.
 
 ### Fix the version of the providers you use
 
@@ -143,4 +143,3 @@ Make resources optional with the count syntax.
 ## Tagging
 
 Implement a tagging scheme from the start, and use a map type for extensibility.
-
