@@ -77,11 +77,12 @@ This is an example for AWS codecommit that conforms <https://github.com/JamesWoo
 
 ## Files
 
-### Name your files after their contents.
+### Name your files after their contents
 
-You have a security group called for elastic search the resource is aws_security_group.elastic, so the file is **aws_security_group.elastic.tf**. Be explicit.
+Suppose you have a security group called "elastic", the resource is then aws_security_group.elastic, so the file is **aws_security_group.elastic.tf**. Be explicit.
+It will save you time.
 
-### One resource per file.
+### One resource per file
 
 **Exception**: By all means group resources where its really makes logical sense, security_group with rules, routes with route tables.
 
@@ -143,3 +144,21 @@ Make resources optional with the count syntax.
 ## Tagging
 
 Implement a tagging scheme from the start, and use a map type for extensibility.
+
+## Recommended Tools
+
+Terraform-docs
+
+The Pre-commit framework
+
+Beyond-Compare or equivalent
+
+The Cli
+
+VScode and Extensions
+
+AWS-Vault
+
+SAML2AWS
+
+build-harness
