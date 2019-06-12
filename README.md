@@ -8,54 +8,54 @@ There are many successful ways of writing your tf, this one is tried and field t
 
 ## Templates
 
-This is the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a root folder in the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
+This is the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a jimw folder in the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
 
 ```bash
 23043-5510:/mnt/c/aws-lexbot-handler# ls -l
 total 64
--rwxrwxrwx    1 root     root          1719 Mar  7 11:02 README.MD
--rwxrwxrwx    1 root     root           411 Mar  7 11:02 buildno.sh
--rwxrwxrwx    1 root     root          1136 Mar 18 15:43 buildspec.yml
--rwxrwxrwx    1 root     root           489 Mar 18 15:40 getlatest.ps1
--rwxrwxrwx    1 root     root           479 Mar  7 11:02 getlatest.sh
-drwxrwxrwx    1 root     root           512 Feb 26 16:22 iac
+-rwxrwxrwx    1 jimw     jimw          1719 Mar  7 11:02 README.MD
+-rwxrwxrwx    1 jimw     jimw           411 Mar  7 11:02 buildno.sh
+-rwxrwxrwx    1 jimw     jimw          1136 Mar 18 15:43 buildspec.yml
+-rwxrwxrwx    1 jimw     jimw           489 Mar 18 15:40 getlatest.ps1
+-rwxrwxrwx    1 jimw     jimw           479 Mar  7 11:02 getlatest.sh
+drwxrwxrwx    1 jimw     jimw           512 Feb 26 16:22 iac
 drwxrwxrwx    1 1000     1000           512 Mar 18 15:41 node_modules
--rwxrwxrwx    1 root     root         49979 Mar 18 15:41 package-lock.json
--rwxrwxrwx    1 root     root          1579 Mar 18 15:41 package.json
-drwxrwxrwx    1 root     root           512 Feb  5 11:51 powershell
--rwxrwxrwx    1 root     root           147 Mar  7 11:02 setlatest.sh
+-rwxrwxrwx    1 jimw     jimw         49979 Mar 18 15:41 package-lock.json
+-rwxrwxrwx    1 jimw     jimw          1579 Mar 18 15:41 package.json
+drwxrwxrwx    1 jimw     jimw           512 Feb  5 11:51 powershell
+-rwxrwxrwx    1 jimw     jimw           147 Mar  7 11:02 setlatest.sh
 ```
 
 Inside the **iac** I breakdown the **templates** used:
 
 ```bash
 total 0
-drwxrwxrwx    1 root     root           512 May 28 11:22 codebuild
-drwxrwxrwx    1 root     root           512 Apr  2 11:00 repository
+drwxrwxrwx    1 jimw     jimw           512 May 28 11:22 codebuild
+drwxrwxrwx    1 jimw     jimw           512 Apr  2 11:00 repository
 ```
 
 This example just has an AWS CodeCommit repository (self describing) and an AWS Codebuild that has multiple environments:
 
 ```bash
 total 0
-drwxrwxrwx    1 root     root           512 Apr 24 23:28 dev
-drwxrwxrwx    1 root     root           512 Apr 24 23:29 prod
+drwxrwxrwx    1 jimw     jimw           512 Apr 24 23:28 dev
+drwxrwxrwx    1 jimw     jimw           512 Apr 24 23:29 prod
 ```
 
 Inside one of these and environmental specific template:
 
 ```bash
 total 19
--rwxrwxrwx    1 root     root           800 May 28 11:21 Makefile
--rwxrwxrwx    1 root     root          1324 Mar  7 11:02 README.md
--rwxrwxrwx    1 root     root           709 Mar  7 11:02 aws_iam_policy.additionalneeds.tf
--rwxrwxrwx    1 root     root            40 Mar  7 11:02 data.aws_current.region.current.tf
--rwxrwxrwx    1 root     root           579 May 28 11:23 module.codebuild.tf
--rwxrwxrwx    1 root     root           239 Mar  7 11:02 outputs.tf
--rwxrwxrwx    1 root     root           208 Apr 24 23:30 provider.tf
--rwxrwxrwx    1 root     root           349 Mar  7 11:02 remote_state.tf
--rwxrwxrwx    1 root     root          1531 May 28 11:25 terraform.tfvars
--rwxrwxrwx    1 root     root           618 May 28 11:20 variables.tf
+-rwxrwxrwx    1 jimw     jimw           800 May 28 11:21 Makefile
+-rwxrwxrwx    1 jimw     jimw          1324 Mar  7 11:02 README.md
+-rwxrwxrwx    1 jimw     jimw           709 Mar  7 11:02 aws_iam_policy.additionalneeds.tf
+-rwxrwxrwx    1 jimw     jimw            40 Mar  7 11:02 data.aws_current.region.current.tf
+-rwxrwxrwx    1 jimw     jimw           579 May 28 11:23 module.codebuild.tf
+-rwxrwxrwx    1 jimw     jimw           239 Mar  7 11:02 outputs.tf
+-rwxrwxrwx    1 jimw     jimw           208 Apr 24 23:30 provider.tf
+-rwxrwxrwx    1 jimw     jimw           349 Mar  7 11:02 remote_state.tf
+-rwxrwxrwx    1 jimw     jimw          1531 May 28 11:25 terraform.tfvars
+-rwxrwxrwx    1 jimw     jimw           618 May 28 11:20 variables.tf
 ```
 
 There's a lot of files in here and some repetition that violates DRY principles, but with IAC, favour on being explict.
