@@ -59,8 +59,8 @@ total 19
 -rwxrwxrwx    1 root     root           618 May 28 11:20 variables.tf
 ```
 
-There's a lot of files in here and some repitition that violates DRY principles, but with IAC, favour on being explict.
-Each template is directly runnable using the Terraform CLI no wrapper script required.
+There's a lot of files in here and some repetition that violates DRY principles, but with IAC, favour on being explict.
+Each template is directly runnable using the Terraform CLI with no wrapper script required.
 Use a generator like tf-scaffold to automate template creation <https://github.com/JamesWoolfenden/tf-scaffold>
 
 ## Modules
@@ -70,10 +70,12 @@ Modules should be treated like applications services with a seperate code reposi
 
 ## Files
 
-- Name your files after their contents.
+### Name your files after their contents.
+
 You have a security group called for elastic search the resource is aws_security_group.elastic, so the file is **aws_security_group.elastic.tf**. Be explicit.
 
-- One resource per file.
+### One resource per file.
+
 **Exception**: By all means group resources where its really makes logical sense, security_group with rules, routes with route tables.
 
 ## Be Specific
