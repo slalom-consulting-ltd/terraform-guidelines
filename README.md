@@ -162,3 +162,5 @@ AWS-Vault
 SAML2AWS
 
 build-harness
+
+travis
