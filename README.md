@@ -164,3 +164,7 @@ SAML2AWS
 build-harness
 
 travis
+
+## Caches
+
+Set a plugin cache. On a fat pipe you might not notice how quickly they download, but do setup your plugin-cache. It will save you time and stress.
