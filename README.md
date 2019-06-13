@@ -1,6 +1,6 @@
 # terraform-guidelines
 
-## A style guide for writing Terraform by James Woolfenden
+## A style guide for writing Terraform
 
 This is a guide to writing Terraform to conform to Slalom London Style, it follows the Hashicorp guide to creating modules for the Terraform Registry <https://www.terraform.io/docs/registry/modules/publish.html> and their standard structure <https://www.terraform.io/docs/modules/index.html#standard-module-structure>.
 
@@ -62,9 +62,56 @@ There's a lot of files in here and some repetition that violates DRY principles,
 Each template is directly runnable using the Terraform CLI with no wrapper script required.
 Use a generator like tf-scaffold to automate template creation <https://github.com/JamesWoolfenden/tf-scaffold>
 
+Tf-Scaffold creates:
+
+### .gitignore
+
+Has good defaults for working with Terraform
+
+### .pre-commit-config.yaml
+
+Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after youve added all these file to your new repo, in the root of your new repository:
+
+``` bash
+pre-commit install
+```
+
+### main.tf
+
+This is an expected file for Terraform modules. I don't use it. Remove it if this a template and add a module.tf.
+
+### Makefile
+
+This is just to make like easier for you. Problematic if you are cross platform as make isn't very good/awful at that. If I do use Windows I update  the PowerShell with equivalent helper functions instead.
+
+### outputs.tf
+
+A standard place to return values, either to the screen or to pass back from a module.
+
+### provider.aws.tf
+
+You are always going to be using these, I have added the most basic provider for AWS.
+
+### README.md
+
+Where all the information goes.
+
+### terraform.tfvars
+
+This is the standard file for setting your variables in, and is automatically picked up by Terraform.
+
+### variables.tf
+
+For defining your variables and setting defautl values
+Also contains a map variable common_tags which should be extended and used on every taggable object.
+
+### .dependsabot/config.yml
+
+Sets the repository to be automatically dependency scanned in github.
+
 ## Modules
 
-You've written some TF and your about to duplicate its functionality, it's time to abstract a module. A module should be more than just one resource.  
+You've written some TF and your about to duplicate its' functionality, it's time to abstract to a module. A module should be more than just one resource, it should add something.  
 Modules should be treated like applications services with a separate code repository for each module.
 
 Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called exampleA.
