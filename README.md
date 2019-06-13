@@ -2,7 +2,7 @@
 
 ## A style guide for writing Terraform
 
-This is a guide to writing Terraform to conform to Slalom London Style, it follows the Hashicorp guide to creating modules for the Terraform Registry <https://www.terraform.io/docs/registry/modules/publish.html> and their standard structure <https://www.terraform.io/docs/modules/index.html#standard-module-structure>.
+This is a guide to writing Terraform to conform to Slalom London Style, it follows the Hashicorp guide to creating modules for the [Terraform Registry](https://www.terraform.io/docs/registry/modules/publish.html) and their [standard structure](https://www.terraform.io/docs/modules/index.html#standard-module-structure).
 
 There are many successful ways of writing your tf, this one is tried and field tested.
 
@@ -60,7 +60,7 @@ total 19
 
 There's a lot of files in here and some repetition that violates DRY principles, but with IAC, favour on being explicit.
 Each template is directly runnable using the Terraform CLI with no wrapper script required.
-Use a generator like tf-scaffold to automate template creation <https://github.com/JamesWoolfenden/tf-scaffold>
+Use a generator like [tf-scaffold](https://github.com/JamesWoolfenden/tf-scaffold) to automate template creation.
 
 Tf-Scaffold creates:
 
@@ -70,7 +70,7 @@ Has good defaults for working with Terraform
 
 ### .pre-commit-config.yaml
 
-Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after youve added all these file to your new repo, in the root of your new repository:
+Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after you've added all these file to your new repository, in the root of your new repository:
 
 ``` bash
 pre-commit install
