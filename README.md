@@ -133,7 +133,7 @@ terraform.tfstate
 
 ### .pre-commit-config.yaml
 
-Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after you've added all these file to your new repository, in the root of your new repository:
+Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after you've added all these file to your new repository **pre-commit-config.yaml**, in the root of your new repository:
 
 ```yml
 repos:
@@ -171,6 +171,8 @@ repos:
   hooks:
   - id: markdownlint
 ```
+
+Remembering to install at the root of your repo.
 
 ``` bash
 pre-commit install
