@@ -443,9 +443,9 @@ Helps with managing many AWS accounts at the CLI.
 
 [SAML2AWS](https://github.com/Versent/saml2aws)
 
-Generates temporary AWS credentials for AWS cmdline. Essentail of running in Federated AD environment.
+Generates temporary AWS credentials for AWS cmdline. Essential of running in Federated AD environment.
 
-[build-harness](https://github.com/cloudposse/build-harness) 
+[build-harness](https://github.com/cloudposse/build-harness)
 
 A DevOps related collection of automated build processes, customised [Slalom version](https://github.com/JamesWoolfenden/build-harness)
 
