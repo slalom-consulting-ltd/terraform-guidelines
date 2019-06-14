@@ -383,6 +383,7 @@ And in your **Terraform.tfvars**
     owner     = "James Woolfenden"
     costcentre= "development"
   }
+```
 
 and then have the common_tags used in your resources file:
 
