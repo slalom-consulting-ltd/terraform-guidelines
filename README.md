@@ -14,7 +14,7 @@ Name must be self explanatory containing several lowercase words if needed separ
 
 Use descriptive and non environment specific names to identify resources.
 
-Avoid Tautologies
+Avoid Tautologies:
 
 ``` terraform
 resource "aws_iam_policy" "ec2_policy"{
@@ -24,7 +24,7 @@ resource "aws_iam_policy" "ec2_policy"{
 
 ## Hardcoding
 
-Dont hardcode values in resources. Add variables and set defaults.
+Don't hardcode values in resources. Add variables and set defaults.
 
 Avoid limiting your self with policies and resources by making resources optional or overidable.
 
@@ -52,11 +52,11 @@ HERE
 }
 ```
 
-And avoid heredocs like the one above and use data.aws_iam_policy_documents as practical.
+And avoid heredocs like the one above, and use data.aws_iam_policy_documents objects, as practical.
 
 ## Templates
 
-This is the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a folder in the root of the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
+This is the Terraform code that is environment specific.  Templates should live with the code that requires it, create a folder in the root of the repository and call it **IAC**, similar to this for the repository aws-lexbot-handlers:
 
 ```bash
 23043-5510:/mnt/c/aws-lexbot-handler# ls -l
@@ -82,7 +82,7 @@ drwxrwxrwx    1 jimw     jimw           512 May 28 11:22 codebuild
 drwxrwxrwx    1 jimw     jimw           512 Apr  2 11:00 repository
 ```
 
-This example just has an AWS CodeCommit repository (self describing) and an AWS Codebuild that has multiple environments:
+This example  has an AWS CodeCommit repository (self describing) and an AWS Codebuild, that has multiple environments:
 
 ```bash
 total 0
@@ -90,7 +90,7 @@ drwxrwxrwx    1 jimw     jimw           512 Apr 24 23:28 dev
 drwxrwxrwx    1 jimw     jimw           512 Apr 24 23:29 prod
 ```
 
-Inside one of these and environmental specific template:
+Inside each of these folder is an environmental specific template:
 
 ```bash
 total 19
@@ -106,15 +106,15 @@ total 19
 -rwxrwxrwx    1 jimw     jimw           618 May 28 11:20 variables.tf
 ```
 
-There's a lot of files in here and some repetition that violates DRY principles, but with IAC, favour on being explicit.
-Each template is directly runnable using the Terraform CLI with no wrapper script required.
+There's a lot of files here and some repetition - that violates DRY principles, but with IAC, favour on being explicit.
+Each template is directly runnable, using the Terraform CLI with no wrapper script required.
 Use a generator like [tf-scaffold](https://github.com/JamesWoolfenden/tf-scaffold) to automate template creation.
 
 Tf-Scaffold creates:
 
 ### .gitignore
 
-Has good defaults for working with Terraform
+Has good defaults for working with Terraform.
 
 ```yaml
 terraform.tfplan
@@ -133,7 +133,7 @@ terraform.tfstate
 
 ### .pre-commit-config.yaml
 
-Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after you've added all these file to your new repository **pre-commit-config.yaml**, in the root of your new repository:
+Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after that you need to add this file to your new repository **pre-commit-config.yaml**, in the root:
 
 ```yml
 repos:
@@ -172,19 +172,17 @@ repos:
   - id: markdownlint
 ```
 
-Remembering to install at the root of your repo.
-
 ``` bash
 pre-commit install
 ```
 
 ### main.tf
 
-This is an expected file for Terraform modules. I don't use it. Remove it if this a template and add a module.tf.
+This is an expected file for Terraform modules. Remove it if this a template and add a **module.tf**.
 
 ### Makefile
 
-This is just to make like easier for you. Problematic if you are cross platform as make isn't very good/awful at that. If I do use Windows I update  the PowerShell with equivalent helper functions instead.
+A helper file. This is just to make like easier for you. Problematic if you are cross platform as make isn't very good/awful at that. If you use Windows update the PowerShell profile with equivalent helper functions instead.
 
 ```makefile
 #Makefile
@@ -243,7 +241,7 @@ A standard place to return values, either to the screen or to pass back from a m
 
 ### provider.aws.tf
 
-You are always going to be using these, I have added the most basic provider for AWS.
+Required. You are always going to be using these, included is this, the most basic provider for AWS.
 
 ### README.md
 
@@ -256,18 +254,18 @@ This is the standard file for setting your variables in, and is automatically pi
 ### variables.tf
 
 For defining your variables and setting default values. Each variable should define its type and have an adeqate description.
-Also contains a map variable common_tags which should be extended and used on every taggable object.
+Also contains a map variable common_tags, which should be extended and used on every taggable object.
 
 ### .dependsabot/config.yml
 
-Sets the repository to be automatically dependency scanned in github.
+Sets the repository to be automatically dependency scanned in Github.
 
 ## Modules
 
 You've written some TF and your about to duplicate its' functionality, it's time to abstract to a module. A module should be more than just one resource, it should add something.  
 Modules should be treated like applications services with a separate code repository for each module.
 
-Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called exampleA.
+Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called **exampleA**.
 
 ```bash
 examples/exampleA/
@@ -279,16 +277,16 @@ This is an example for AWS codecommit that conforms <https://github.com/JamesWoo
 
 ### Name your files after their contents
 
-Suppose you have a security group called "elastic", the resource is then aws_security_group.elastic, so the file is **aws_security_group.elastic.tf**. Be explicit.
+For a security group called "elastic", the resource is then aws_security_group.elastic, so the file is **aws_security_group.elastic.tf**. Be explicit.
 It will save you time.
 
 ### Comments
 
-I use Markdown for this as many parsers break when you add comments into your TF.
+Use Markdown for this, as many fmt and parsers break when you add comments into your TF with hashes and slash star comments.
 
 ### One resource per file
 
-**Exception**: By all means group resources where its really makes logical sense, security_group with rules, routes with route tables.
+**Exception**: By all means group resources - where its really makes logical sense, security_group with rules, routes with route tables.
 
 ## Be Specific
 
@@ -307,8 +305,8 @@ terraform {
 
 ### Fix the version of the modules you consume
 
-In your **module.tf** file set the version of the module. If you author modules make sure you tag successful module builds.
-If your module comes from a registry, specify using the version property, if its only standard git use a tag reference in your source statement.
+In your **module.tf** file, set the version of the module. If you author modules, make sure you tag successful module builds.
+If your module comes from a registry, specify using the version property, if its only standard git source reference use a tag reference in your source statement.
 
 If it's using modules from the registry like **modules.codebuild.tf**:
 
@@ -334,11 +332,11 @@ provider "aws" {
 
 ## State
 
-Using remote state is not optional, use a [locking state bucket](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15) or use the free state management layer in Terraform Enterprise. The new free tier is worth a look.
+Using remote state is not optional, use a [locking state bucket](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15) or use the free state management layer in Terraform Enterprise. This new free tier is worth a look.
 
 ## Layout
 
-As your mandating use of the standard pre-commit, **Terraform fmt** is always run on git commit. End of problem.
+Mandate the use of the standard pre-commit, using that the command **Terraform fmt** is always run on Git commit. End of problem.
 
 ## Protecting Secrets
 
@@ -427,7 +425,7 @@ So many different uses from linting to security, every git repo should have one.
 
 [Beyond-Compare](https://www.scootersoftware.com/) or equivalent
 
-My preference as the best comparision tool.
+A preference, for a comparision tool.
 
 The Cli
 
@@ -443,7 +441,7 @@ Helps with managing many AWS accounts at the CLI.
 
 [SAML2AWS](https://github.com/Versent/saml2aws)
 
-Generates temporary AWS credentials for AWS cmdline. Essential of running in Federated AD environment.
+Generates temporary AWS credentials for AWS cmdline. Essential for running in Federated AD environment.
 
 [build-harness](https://github.com/cloudposse/build-harness)
 
