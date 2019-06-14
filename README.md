@@ -360,7 +360,12 @@ Make resources optional with the count syntax.
 
 ## Unit Testing
 
-As yet to find a satisfactory test approach or tool for testing Terraform. Include a test implemtation with your modules, run it for every change and tag the successful outcomes. Repeat.
+As yet to find a really satisfactory test approach or tool for testing Terraform other than:
+
+ - Include a test implemtenation with your modules - from your examples root folder.
+ - Run it for every change.
+ - Tag the successful outcomes.
+ - Destroy created resources
 
 ## Tagging
 
