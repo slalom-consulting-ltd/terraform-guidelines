@@ -116,9 +116,61 @@ Tf-Scaffold creates:
 
 Has good defaults for working with Terraform
 
+```yaml
+terraform.tfplan
+terraform.tfstate
+.terraform/
+./*.tfstate
+*.backup
+*.DS_Store
+*.log
+*.bak
+*~
+.*.swp
+.project
+
+```
+
 ### .pre-commit-config.yaml
 
 Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after you've added all these file to your new repository, in the root of your new repository:
+
+```yml
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.1.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+- repo: git://github.com/Lucas-C/pre-commit-hooks
+  rev: v1.1.6
+  hooks:
+  - id: forbid-tabs
+    exclude_types: [python, javascript, dtd, markdown, makefile, xml]
+    exclude: binary|\.bin$
+- repo: git://github.com/kintoandar/pre-commit.git
+  rev: v2.1.0
+  hooks:
+  - id: terraform_fmt
+- repo: https://github.com/pre-commit/pre-commit-hooks.git
+  rev: v2.1.0
+  stages:
+  - commit
+  - push
+  hooks:
+  -   id: detect-aws-credentials
+  -   id: detect-private-key
+- repo: https://github.com/detailyang/pre-commit-shell
+  rev: 1.0.4
+  hooks:
+  - id: shell-lint
+- repo: git://github.com/igorshubovych/markdownlint-cli
+  rev: v0.13.0
+  hooks:
+  - id: markdownlint
+```
 
 ``` bash
 pre-commit install
@@ -131,6 +183,57 @@ This is an expected file for Terraform modules. I don't use it. Remove it if thi
 ### Makefile
 
 This is just to make like easier for you. Problematic if you are cross platform as make isn't very good/awful at that. If I do use Windows I update  the PowerShell with equivalent helper functions instead.
+
+```makefile
+#Makefile
+ifdef OS
+   RM   = $(powershell  -noprofile rm .\.terraform\modules -force -recurse)
+   BLAT = $(powershell  -noprofile rm .\.terraform\ -force -recurse)
+else
+   ifeq ($(shell uname), Linux)
+      RM  = rm .terraform/modules/ -fr
+      BLAT= rm .terraform/ -fr
+   endif
+endif
+
+.PHONY: all
+
+all: init plan build
+
+init:
+	$(RM)
+	terraform init -reconfigure
+
+plan: init
+	terraform plan -refresh=true
+
+p:
+	terraform plan -refresh=true | landscape
+
+build: init
+	terraform apply -auto-approve
+
+check: init
+	terraform plan -detailed-exitcode
+
+destroy: init
+	terraform destroy -force
+
+docs:
+	terraform-docs md . > README.md
+
+valid:
+	tflint
+	terraform fmt -check=true -diff=true
+
+target:
+	@read -p "Enter Module to target:" MODULE;
+	terraform apply -target $$MODULE
+
+purge:
+	$(BLAT)
+	terraform init -reconfigure
+```
 
 ### outputs.tf
 
