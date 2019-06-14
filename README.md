@@ -6,6 +6,54 @@ This is a guide to writing Terraform to conform to Slalom London Style, it follo
 
 There are many successful ways of writing your tf, this one is tried and field tested.
 
+## Naming
+
+Use Lowercase names for resources.
+Use "_" as a separator for resource names.
+Name must be self explanatory containing several lowercase words if needed separated by "_".
+
+Use descriptive and non environment specific names to identify resources.
+
+Avoid Tautologies
+
+``` terraform
+resource "aws_iam_policy" "ec2_policy"{
+  ...
+}
+```
+
+## Hardcoding
+
+Dont hardcode values in resources. Add variables and set defaults.
+
+Avoid limiting your self with policies and resources by making resources optional or overidable.
+
+```Terraform
+resource "aws_iam_role" "codebuild" {
+  name  = "codebuildrole-${var.name}"
+  count = "${var.role == "" ? 1 : 0}"
+
+  assume_role_policy = <<HERE
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "codebuild.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+HERE
+
+  tags = "${var.common_tags}"
+}
+```
+
+And avoid heredocs like the one above and use data.aws_iam_policy_documents as practical.
+
 ## Templates
 
 This is the Terraform code that is environment specific.  Templates should live with the code the that requires it, I usually create a folder in the root of the repository and all it **IAC**, something like this for the repository aws-lexbot-handlers:
@@ -102,7 +150,7 @@ This is the standard file for setting your variables in, and is automatically pi
 
 ### variables.tf
 
-For defining your variables and setting defautl values
+For defining your variables and setting default values. Each variable should define its type and have an adeqate description.
 Also contains a map variable common_tags which should be extended and used on every taggable object.
 
 ### .dependsabot/config.yml
@@ -129,6 +177,10 @@ This is an example for AWS codecommit that conforms <https://github.com/JamesWoo
 Suppose you have a security group called "elastic", the resource is then aws_security_group.elastic, so the file is **aws_security_group.elastic.tf**. Be explicit.
 It will save you time.
 
+### Comments
+
+I use Markdown for this as many parsers break when you add comments into your TF.
+
 ### One resource per file
 
 **Exception**: By all means group resources where its really makes logical sense, security_group with rules, routes with route tables.
@@ -153,6 +205,17 @@ terraform {
 In your **module.tf** file set the version of the module. If you author modules make sure you tag successful module builds.
 If your module comes from a registry, specify using the version property, if its only standard git use a tag reference in your source statement.
 
+If it's using modules from the registry like **modules.codebuild.tf**:
+
+```terraform
+module "codebuild" {
+  source                 = "jameswoolfenden/codebuild/aws"
+  version                = "0.1.41"
+  root                   = "${var.root}"
+  description            = "${var.description}"
+}
+```
+
 ### Fix the version of the providers you use
 
 Using shiny things is great, what's not great is code that worked yesterday breaking because a plugin/provider changed. Specify the version in your **provider.tf** file.
@@ -166,7 +229,7 @@ provider "aws" {
 
 ## State
 
-Using remote state is not optional, use a locking state bucket or use the free state management layer in Terraform Enterprise. The new free tier is worth a look.
+Using remote state is not optional, use a [locking state bucket](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15) or use the free state management layer in Terraform Enterprise. The new free tier is worth a look.
 
 ## Layout
 
@@ -176,8 +239,10 @@ As your mandating use of the standard pre-commit, **Terraform fmt** is always ru
 
 Protect your secrets by installing using the pre-commit file and the hooks from the standard set:
 
+```hooks
 - id: detect-aws-credentials
 - id: detect-private-key
+```
 
 Other options include using git-secrets, Husky or using Talisman.  Use and mandate use of one, by all. Dont be that person.
 
@@ -188,30 +253,95 @@ Use a data source over adding a configuration value.
 Set default values for your modules variables.
 Make resources optional with the count syntax.
 
+## Unit Testing
+
+As yet to find a satisfactory test approach or tool for testing Terraform. Include a test implemtation with your modules, run it for every change and tag the successful outcomes. Repeat.
+
 ## Tagging
 
 Implement a tagging scheme from the start, and use a map type for extensibility.
 
+In **variables.tf**:
+
+```terraform
+variable "common_tags" {
+  type       = "map"
+  description= "Implements the common_tags scheme"
+}
+```
+
+And in your **Terraform.tfvars**
+
+```terraform
+  common_tags={
+    name      = "sap-proxy-layer"
+    owner     = "James Woolfenden"
+    costcentre= "development"
+  }
+
+and then have the common_tags used in your resources file:
+
+```terraform
+resource "aws_codebuild_project" "project" {
+  name          = "${replace(var.name,".","-")}"
+  description   = "${var.description}"
+  service_role  = "${var.role == "" ? element(concat(aws_iam_role.codebuild.*.arn, list("")), 0) : element(concat(data.aws_iam_role.existing.*.arn, list("")), 0) }"
+  build_timeout = "${var.build_timeout}"
+
+  artifacts {
+    type                = "${var.type}"
+    location            = "${local.bucketname}"
+    name                = "${var.name}"
+    namespace_type      = "${var.namespace_type}"
+    packaging           = "${var.packaging}"
+    encryption_disabled = "${var.encryption_disabled}"
+  }
+
+  environment = "${var.environment}"
+  source      = "${var.sourcecode}"
+  tags        = "${var.common_tags}"
+}
+
+```
+
 ## Recommended Tools
 
-Terraform-docs
+[Terraform-docs](https://github.com/segmentio/terraform-docs)
 
-The Pre-commit framework
+Run to help make your readmes, included with the build-harness.
 
-Beyond-Compare or equivalent
+The [Pre-commit](https://pre-commit.com/) framework
+
+So many different uses from linting to security, every git repo should have one.
+
+[Beyond-Compare](https://www.scootersoftware.com/) or equivalent
+
+My preference as the best comparision tool.
 
 The Cli
 
-VScode and Extensions
+Be it AWS, or whatever provider your using.
 
-AWS-Vault
+[VSCode](https://code.visualstudio.com/) and Extensions
 
-SAML2AWS
+Free and really quite good editor, with awesome extensions. Use the Extensions sync extension to maintain your [environment](https://gist.github.com/JamesWoolfenden/1a1ce363e6e6e5d2bcf321ca12ec3de2).
 
-build-harness
+[AWS-Vault](https://github.com/99designs/aws-vault)
 
-travis
+Helps with managing many AWS accounts at the CLI.
+
+[SAML2AWS](https://github.com/Versent/saml2aws)
+
+Generates temporary AWS credentials for AWS cmdline. Essentail of running in Federated AD environment.
+
+[build-harness](https://github.com/cloudposse/build-harness) 
+
+A DevOps related collection of automated build processes, customised [Slalom version](https://github.com/JamesWoolfenden/build-harness)
+
+[Travis](https://travis-ci.com/) - or free for [open source projects](https://travis-ci.org/getting_started).
+
+There are many other good SAS CI/CD tools including Circle, GitLab and a few shockers.
 
 ## Caches
 
-Set a plugin cache. On a fat pipe you might not notice how quickly they download, but do setup your plugin-cache. It will save you time and stress.
+Set a [plugin cache](https://www.terraform.io/docs/commands/cli-config.html). On a fat pipe you might not notice how quickly they download, but do setup your plugin-cache. It will save you time and stress.
