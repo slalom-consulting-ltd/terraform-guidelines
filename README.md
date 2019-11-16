@@ -137,7 +137,7 @@ Has a standard set of pre-commit hooks for working with Terraform and AWS. You'l
 
 ```yml
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+-   repo: git://github.com/pre-commit/pre-commit-hooks
     rev: v2.1.0
     hooks:
     -   id: trailing-whitespace
@@ -154,7 +154,7 @@ repos:
   rev: v2.1.0
   hooks:
   - id: terraform_fmt
-- repo: https://github.com/pre-commit/pre-commit-hooks.git
+- repo: git://github.com/pre-commit/pre-commit-hooks
   rev: v2.1.0
   stages:
   - commit
@@ -162,7 +162,7 @@ repos:
   hooks:
   -   id: detect-aws-credentials
   -   id: detect-private-key
-- repo: https://github.com/detailyang/pre-commit-shell
+- repo: git://github.com/detailyang/pre-commit-shell
   rev: 1.0.4
   hooks:
   - id: shell-lint
@@ -175,6 +175,7 @@ repos:
 ``` bash
 pre-commit install
 ```
+Hooks choices are a matter for each project. 
 
 ### main.tf
 
@@ -241,14 +242,16 @@ A standard place to return values, either to the screen or to pass back from a m
 
 ### provider.aws.tf
 
+Or Whatever you provider is or are.
 Required. You are always going to be using these, included is this, the most basic provider for AWS.
 
 ### README.md
 
 Where all the information goes.
 
-### terraform.tfvars
+### example.auto.tfvars
 
+Files ending .auto.tfvars get picked by Terraform locally and in Terraform cloud. 
 This is the standard file for setting your variables in, and is automatically picked up by Terraform.
 
 ### variables.tf
@@ -311,11 +314,11 @@ If your module comes from a registry, specify using the version property, if its
 If it's using modules from the registry like **modules.codebuild.tf**:
 
 ```terraform
-module "codebuild" {
+module codebuild {
   source                 = "jameswoolfenden/codebuild/aws"
   version                = "0.1.41"
-  root                   = "${var.root}"
-  description            = "${var.description}"
+  root                   = var.root
+  description            = var.description
 }
 ```
 
@@ -378,7 +381,7 @@ variable "common_tags" {
 }
 ```
 
-And in your **Terraform.tfvars**
+And in your **example.auto.tfvars**
 
 ```terraform
   common_tags={
@@ -393,22 +396,22 @@ and then have the common_tags used in your resources file:
 ```terraform
 resource "aws_codebuild_project" "project" {
   name          = "${replace(var.name,".","-")}"
-  description   = "${var.description}"
+  description   = var.description
   service_role  = "${var.role == "" ? element(concat(aws_iam_role.codebuild.*.arn, list("")), 0) : element(concat(data.aws_iam_role.existing.*.arn, list("")), 0) }"
-  build_timeout = "${var.build_timeout}"
+  build_timeout = "var.build_timeout
 
   artifacts {
-    type                = "${var.type}"
-    location            = "${local.bucketname}"
-    name                = "${var.name}"
-    namespace_type      = "${var.namespace_type}"
-    packaging           = "${var.packaging}"
-    encryption_disabled = "${var.encryption_disabled}"
+    type                = var.type
+    location            = local.bucketname
+    name                = var.name
+    namespace_type      = var.namespace_type
+    packaging           = var.packaging
+    encryption_disabled = var.encryption_disabled
   }
 
-  environment = "${var.environment}"
-  source      = "${var.sourcecode}"
-  tags        = "${var.common_tags}"
+  environment = var.environment
+  source      =var.sourcecode
+  tags        = var.common_tags
 }
 
 ```
