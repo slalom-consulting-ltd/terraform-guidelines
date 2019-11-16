@@ -9,8 +9,8 @@ There are many successful ways of writing your tf, this one is tried and field t
 ## Naming
 
 Use Lowercase names for resources.
-Use "_" as a separator for resource names.
-Name must be self explanatory containing several lowercase words if needed separated by "_".
+Use "\_" as a separator for resource names.
+Name must be self explanatory containing several lowercase words if needed separated by "\_".
 
 Use descriptive and non environment specific names to identify resources.
 
@@ -26,7 +26,7 @@ resource "aws_iam_policy" "ec2_policy"{
 
 Don't hardcode values in resources. Add variables and set defaults.
 
-Avoid limiting your self with policies and resources by making resources optional or overidable.
+You can avoid limiting yourself with policies and resources by making resources optional or overidable.
 
 ```Terraform
 resource "aws_iam_role" "codebuild" {
@@ -52,11 +52,11 @@ HERE
 }
 ```
 
-And avoid heredocs like the one above, and use data.aws_iam_policy_documents objects, as practical.
+And avoid heredocs like the one above, and use **data.aws_iam_policy_documents** objects, as practical.
 
 ## Templates
 
-This is the Terraform code that is environment specific.  Templates should live with the code that requires it, create a folder in the root of the repository and call it **IAC**, similar to this for the repository aws-lexbot-handlers:
+This is the Terraform code that is environment specific.  If your Templates are application specific the code should live with the code that requires it, create a folder in the root of the repository and call it **IAC**, similar to this for the repository aws-lexbot-handlers:
 
 ```bash
 23043-5510:/mnt/c/aws-lexbot-handler# ls -l
