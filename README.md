@@ -48,7 +48,7 @@ resource "aws_iam_role" "codebuild" {
 }
 HERE
 
-  tags = "${var.common_tags}"
+  tags = var.common_tags
 }
 ```
 
@@ -410,11 +410,24 @@ resource "aws_codebuild_project" "project" {
   }
 
   environment = var.environment
-  source      =var.sourcecode
+  source      = var.sourcecode
   tags        = var.common_tags
 }
-
 ```
+So, use Readable Key value pairs.
+DO NOT NAME OR TAG YOUR RESOURCES LIKE YOUR STILL ON PREM. 
+So naming a security group  
+
+ **DEV_TEAM_WILBUR4873_APP_SG**
+
+is not helpful but
+```
+tags={
+TEAM="Wilbur"
+Purpose="App"
+CostCode="4873}
+```
+Is fine. Names you can't update, tags you can. The longer you make the resource names the more bugs you will find/make.
 
 ## Recommended Tools
 
