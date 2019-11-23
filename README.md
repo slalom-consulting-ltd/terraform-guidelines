@@ -428,6 +428,8 @@ Purpose="App"
 CostCode="4873}
 ```
 Is fine. Names you can't update, tags you can. The longer you make the resource names the more bugs you will find/make.
+Ok I get it some resources dont have tag attributes or you have some "Security" policy or other that mean you must have a naming regime.
+If so I'd either use or copy the naming module from the Cloud Posse [https://github.com/cloudposse/terraform-null-label](https://github.com/cloudposse/terraform-null-label).
 
 ## Recommended Tools
 
