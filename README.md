@@ -1,4 +1,8 @@
-# terraform-guidelines
+# Terraform guidelines
+
+[![Latest Release](https://img.shields.io/github/v/tag/slalom-consulting-ltd/terraform-guidelines.svg)](https://github.com/slalom-consulting-ltd/terraform-guidelines)
+
+By [James Woolfenden](https://www.linkedin.com/in/jameswoolfenden/)
 
 ## A style guide for writing Terraform
 
