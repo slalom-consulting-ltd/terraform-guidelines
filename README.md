@@ -417,21 +417,23 @@ resource "aws_codebuild_project" "project" {
 }
 ```
 So, use Readable Key value pairs.
-DO NOT NAME OR TAG YOUR RESOURCES LIKE YOUR STILL ON PREM. 
+You don't have to name your like your still on premise. 
 So naming a security group  
 
  **DEV_TEAM_WILBUR4873_APP_SG**
 
-is not helpful but
+is not necessarily helpful but
 ```
 tags={
 TEAM="Wilbur"
 Purpose="App"
 CostCode="4873}
 ```
-Is fine. Names you can't update, tags you can. The longer you make the resource names the more bugs you will find/make.
+Is better. Names you can't update, tags you can. The longer you make the resource names the more bugs you will find/make.
 Ok I get it some resources dont have tag attributes or you have some "Security" policy or other that mean you must have a naming regime.
-If so I'd either use or copy the naming module from the Cloud Posse [https://github.com/cloudposse/terraform-null-label](https://github.com/cloudposse/terraform-null-label).
+
+If so I'd either use or copy the naming module from the Cloud Posse 
+[https://github.com/cloudposse/terraform-null-label](https://github.com/cloudposse/terraform-null-label).
 
 ## Recommended Tools
 
