@@ -29,11 +29,11 @@ resource "aws_iam_policy" "ec2_policy"{
 }
 ```
 
-## Hardcoding
+## Hard-coding
 
-Don't hardcode values in resources. Add variables and set defaults.
+Don't hard-code values in resources. Add variables and set defaults.
 
-You can avoid limiting yourself with policies and resources by making resources optional or overidable.
+You can avoid limiting yourself with policies and resources by making resources optional or over-ridable.
 
 ```Terraform
 resource "aws_iam_role" "codebuild" {
@@ -59,7 +59,7 @@ HERE
 }
 ```
 
-And avoid heredocs like the one above, and use **data.aws_iam_policy_documents** objects, as practical.
+And avoid HEREDOCS like the one above, and use **data.aws_iam_policy_documents** objects, as practical.
 
 ## Templates
 
@@ -143,47 +143,69 @@ terraform.tfstate
 Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after that you need to add this file to your new repository **pre-commit-config.yaml**, in the root:
 
 ```yml
+---
+# yamllint disable rule:line-length
+default_language_version:
+  python: python3
 repos:
--   repo: git://github.com/pre-commit/pre-commit-hooks
-    rev: v2.1.0
+  - repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
-- repo: git://github.com/Lucas-C/pre-commit-hooks
-  rev: v1.1.6
-  hooks:
-  - id: forbid-tabs
-    exclude_types: [python, javascript, dtd, markdown, makefile, xml]
-    exclude: binary|\.bin$
-- repo: git://github.com/kintoandar/pre-commit.git
-  rev: v2.1.0
-  hooks:
-  - id: terraform_fmt
-- repo: git://github.com/pre-commit/pre-commit-hooks
-  rev: v2.1.0
-  stages:
-  - commit
-  - push
-  hooks:
-  -   id: detect-aws-credentials
-  -   id: detect-private-key
-- repo: git://github.com/detailyang/pre-commit-shell
-  rev: 1.0.4
-  hooks:
-  - id: shell-lint
-- repo: git://github.com/igorshubovych/markdownlint-cli
-  rev: v0.13.0
-  hooks:
-  - id: markdownlint
+      - id: check-json
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: pretty-format-json
+        args:
+          - --autofix
+      - id: detect-aws-credentials
+      - id: detect-private-key
+  - repo: git://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.7
+    hooks:
+      - id: forbid-tabs
+        exclude_types:
+          - python
+          - javascript
+          - dtd
+          - markdown
+          - makefile
+          - xml
+        exclude: binary|\.bin$
+  - repo: git://github.com/jameswoolfenden/pre-commit-shell
+    rev: 0.0.2
+    hooks:
+      - id: shell-lint
+  - repo: git://github.com/igorshubovych/markdownlint-cli
+    rev: v0.22.0
+    hooks:
+      - id: markdownlint
+  - repo: git://github.com/adrienverge/yamllint
+    rev: v1.20.0
+    hooks:
+      - id: yamllint
+        name: yamllint
+        description: This hook runs yamllint.
+        entry: yamllint
+        language: python
+        types: [file, yaml]
+  - repo: git://github.com/jameswoolfenden/pre-commit
+    rev: 0.1.23
+    hooks:
+      - id: terraform-fmt
+      - id: checkov-scan
+        language_version: python3.7
+      - id: tf2docs
+        language_version: python3.7
 ```
 
 ``` bash
 pre-commit install
 ```
 
-Hooks choices are a matter for each project.
+Hooks choices are a matter for each project, but if your are using Terraform or AWS the credentials and private key hooks or equivalent are required.
 
 ### main.tf
 
@@ -310,7 +332,7 @@ Create a file called **terraform.tf** in your template:
 
 ```terraform
 terraform {
-    required_version="0.12"
+    required_version="0.12.21"
 }
 ```
 
@@ -358,7 +380,7 @@ Protect your secrets by installing using the pre-commit file and the hooks from 
 - id: detect-private-key
 ```
 
-Other options include using git-secrets, Husky or using Talisman.  Use and mandate use of one, by all. Dont be that person.
+Other options include using git-secrets, Husky or using Talisman.  Use and mandate use of one, by all. Don't be that person.
 
 ## Configuration
 
