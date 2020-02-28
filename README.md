@@ -1,4 +1,9 @@
+[![Slalom][logo]](https://slalom.com)
+
+# Terraform Guidelines
+
 [![Latest Release](https://img.shields.io/github/v/tag/slalom-consulting-ltd/terraform-guidelines.svg)](https://github.com/slalom-consulting-ltd/terraform-guidelines)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 By [James Woolfenden](https://www.linkedin.com/in/jameswoolfenden/)
 
@@ -177,7 +182,8 @@ repos:
 ``` bash
 pre-commit install
 ```
-Hooks choices are a matter for each project. 
+
+Hooks choices are a matter for each project.
 
 ### main.tf
 
@@ -204,38 +210,38 @@ endif
 all: init plan build
 
 init:
-	$(RM)
-	terraform init -reconfigure
+   $(RM)
+   terraform init -reconfigure
 
 plan: init
-	terraform plan -refresh=true
+  terraform plan -refresh=true
 
 p:
-	terraform plan -refresh=true | landscape
+  terraform plan -refresh=true | landscape
 
 build: init
-	terraform apply -auto-approve
+   terraform apply -auto-approve
 
 check: init
-	terraform plan -detailed-exitcode
+   terraform plan -detailed-exitcode
 
 destroy: init
-	terraform destroy -force
+   terraform destroy -force
 
 docs:
-	terraform-docs md . > README.md
+   terraform-docs md . > README.md
 
 valid:
-	tflint
-	terraform fmt -check=true -diff=true
+   tflint
+   terraform fmt -check=true -diff=true
 
 target:
-	@read -p "Enter Module to target:" MODULE;
-	terraform apply -target $$MODULE
+   @read -p "Enter Module to target:" MODULE;
+   terraform apply -target $$MODULE
 
 purge:
-	$(BLAT)
-	terraform init -reconfigure
+   $(BLAT)
+   terraform init -reconfigure
 ```
 
 ### outputs.tf
@@ -253,7 +259,7 @@ Where all the information goes.
 
 ### example.auto.tfvars
 
-Files ending .auto.tfvars get picked by Terraform locally and in Terraform cloud. 
+Files ending .auto.tfvars get picked by Terraform locally and in Terraform cloud.
 This is the standard file for setting your variables in, and is automatically picked up by Terraform.
 
 ### variables.tf
@@ -267,7 +273,7 @@ Sets the repository to be automatically dependency scanned in Github.
 
 ## Modules
 
-You've written some TF and your about to duplicate its' functionality, it's time to abstract to a module. A module should be more than just one resource, it should add something.  
+You've written some TF and your about to duplicate its' functionality, it's time to abstract to a module. A module should be more than just one resource, it should add something.
 Modules should be treated like applications services with a separate code repository for each module.
 
 Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called **exampleA**.
@@ -299,7 +305,7 @@ You have 2 choices with dependencies. Live on the bleeding edge, or fix your ver
 
 ### Fix the version of Terraform you use
 
-The whole team needs to use the same version of the tool until you decide as a team to update.  
+The whole team needs to use the same version of the tool until you decide as a team to update.
 Create a file called **terraform.tf** in your template:
 
 ```terraform
@@ -365,10 +371,10 @@ Make resources optional with the count syntax.
 
 As yet to find a really satisfactory test approach or tool for testing Terraform other than:
 
- - Include a test implementation with your modules - from your examples root folder.
- - Run it for every change.
- - Tag the successful outcomes.
- - Destroy created resources
+- Include a test implementation with your modules - from your examples root folder.
+- Run it for every change.
+- Tag the successful outcomes.
+- Destroy created resources
 
 ## Tagging
 
@@ -416,23 +422,26 @@ resource "aws_codebuild_project" "project" {
   tags        = var.common_tags
 }
 ```
-So, use Readable Key value pairs.
-You don't have to name your like your still on premise. 
-So naming a security group  
 
- **DEV_TEAM_WILBUR4873_APP_SG**
+So, use Readable Key value pairs.
+You don't have to name your like your still on premise.
+So naming a security group
+
+DEV_TEAM_WILBUR4873_APP_SG
 
 is not necessarily helpful but
-```
+
+```HCL
 tags={
 TEAM="Wilbur"
 Purpose="App"
 CostCode="4873}
 ```
-Is better. Names you can't update, tags you can. The longer you make the resource names the more bugs you will find/make.
-Ok I get it some resources dont have tag attributes or you have some "Security" policy or other that mean you must have a naming regime.
 
-If so I'd either use or copy the naming module from the Cloud Posse 
+Is better. Names you can't update, tags you can. The longer you make the resource names the more bugs you will find/make.
+Ok I get it some resources don't have tag attributes or you have some "Security" policy or other that mean you must have a naming regime.
+
+If so I'd either use or copy the naming module from the Cloud Posse
 [https://github.com/cloudposse/terraform-null-label](https://github.com/cloudposse/terraform-null-label).
 
 ## Recommended Tools
@@ -447,7 +456,7 @@ So many different uses from linting to security, every git repo should have one.
 
 [Beyond-Compare](https://www.scootersoftware.com/) or equivalent
 
-A preference, for a comparision tool.
+A preference, for a comparison tool.
 
 The Cli
 
@@ -476,3 +485,11 @@ There are many other good SAS CI/CD tools including Circle, GitLab and a few sho
 ## Caches
 
 Set a [plugin cache](https://www.terraform.io/docs/commands/cli-config.html). On a fat pipe you might not notice how quickly they download, but do setup your plugin-cache. It will save you time and stress.
+
+### Contributors
+
+[![James Woolfenden][jameswoolfenden_avatar]][jameswoolfenden_homepage]<br/>[James Woolfenden][jameswoolfenden_homepage]
+
+[jameswoolfenden_homepage]: https://github.com/jameswoolfenden
+[jameswoolfenden_avatar]: https://github.com/jameswoolfenden.png?size=150
+[logo]: https://gist.githubusercontent.com/JamesWoolfenden/5c457434351e9fe732ca22b78fdd7d5e/raw/15933294ae2b00f5dba6557d2be88f4b4da21201/slalom-logo.png
