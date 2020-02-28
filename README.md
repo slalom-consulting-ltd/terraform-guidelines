@@ -1,6 +1,6 @@
 [![Slalom][logo]](https://slalom.com)
 
-# Terraform Guidelines
+# A guide
 
 [![Latest Release](https://img.shields.io/github/v/tag/slalom-consulting-ltd/terraform-guidelines.svg)](https://github.com/slalom-consulting-ltd/terraform-guidelines)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
