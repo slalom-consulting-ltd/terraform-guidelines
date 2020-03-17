@@ -516,6 +516,10 @@ Checks your Terraform for security flaws.
 
 There are many other good SAS CI/CD tools including Circle, GitLab and a few shockers.
 
+[Hub](https://github.com/github/hub)
+
+Makes working with Github at the cli easy.
+
 ## Caches
 
 Set a [plugin cache](https://www.terraform.io/docs/commands/cli-config.html). On a fat pipe you might not notice how quickly they download, but do set-up your plugin-cache. It will save you time and stress.
