@@ -15,9 +15,9 @@ There are many successful ways of writing your tf, this one is tried and field t
 
 ## Naming
 
-Use Lowercase names for resources.
+Use Lower-case names for resources.
 Use "\_" as a separator for resource names.
-Name must be self explanatory containing several lowercase words if needed separated by "\_".
+Names must be self explanatory containing several lower-case words if needed separated by "\_".
 
 Use descriptive and non environment specific names to identify resources.
 
@@ -201,6 +201,8 @@ repos:
         language_version: python3.7
 ```
 
+Use hooks that don't clash and ensure they are cross platform compatible.
+
 ``` bash
 pre-commit install
 ```
@@ -268,7 +270,7 @@ purge:
 
 ### outputs.tf
 
-A standard place to return values, either to the screen or to pass back from a module.
+A standard place to return values, either to the screen or to pass back from a module. Use descriptions.
 
 ### provider.aws.tf
 
@@ -286,8 +288,8 @@ This is the standard file for setting your variables in, and is automatically pi
 
 ### variables.tf
 
-For defining your variables and setting default values. Each variable should define its type and have an adeqate description.
-Also contains a map variable common_tags, which should be extended and used on every taggable object.
+For defining your variables and setting default values. Each variable should define its type and have an adequate description.
+Also contains a map variable common_tags, which should be extended and used on every taggable object.  Use descriptions.
 
 ### .dependsabot/config.yml
 
@@ -298,13 +300,15 @@ Sets the repository to be automatically dependency scanned in Github.
 You've written some TF and your about to duplicate its' functionality, it's time to abstract to a module. A module should be more than just one resource, it should add something.
 Modules should be treated like applications services with a separate code repository for each module.
 
-Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called **exampleA**.
+Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called **examplea**.
 
 ```bash
-examples/exampleA/
+examples/exampleAa
 ```
 
 This is an example for AWS codecommit that conforms <https://github.com/JamesWoolfenden/terraform-aws-codecommit>
+
+Use lowercase for all folder namesm, avoid spaces.
 
 ## Files
 
@@ -315,15 +319,17 @@ It will save you time.
 
 ### Comments
 
-Use Markdown for this, as many fmt and parsers break when you add comments into your TF with hashes and slash star comments.
+Use Markdown for this, as many fmt and parsers break when you add comments into your TF with hashes and slash star comments. Some say it helps. Make sure to add descriptions to your variables and outputs.
 
 ### One resource per file
 
 **Exception**: By all means group resources - where its really makes logical sense, security_group with rules, routes with route tables.
 
+The style suggestion follows the standard practice in most development languages, it helps you navigate your code in your editor. Editing the same file in multiple locations is unhelpful.
+
 ## Be Specific
 
-You have 2 choices with dependencies. Live on the bleeding edge, or fix your versions. I recommend being in control.
+You have 2 choices with dependencies. Live on the bleeding edge, or fix your versions. I recommend being in control [That's fixing the version].
 
 ### Fix the version of Terraform you use
 
@@ -335,6 +341,8 @@ terraform {
     required_version="0.12.21"
 }
 ```
+
+You will need to do do a coordinated update of provider versions and tools versions at regular intervals e.g. ~3 months.
 
 ### Fix the version of the modules you consume
 
@@ -359,17 +367,21 @@ Using shiny things is great, what's not great is code that worked yesterday brea
 ```terraform
 provider "aws" {
   region  = "eu-west-1"
-  version = "2.15.0"
+  version = "2.52.0"
 }
 ```
 
 ## State
 
-Using remote state is not optional, use a [locking state bucket](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15) or use the free state management layer in Terraform Enterprise. This new free tier is worth a look.
+Using remote state is not optional, use a [locking state bucket](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15) or use the free state management layer in Terraform Cloud/Enterprise. This new free tier Cloud is works but requires configuration.
+
+Using Remote state is mandatory. There are many good choices here <https://www.terraform.io/docs/state/remote.html>, choose one that supports locking and versioning.
+Locking stops the state file being corrupted by multiple writes, it also indicates to users that they are attempting to update the same code.
+Versioning is there to recover from file corruption and accidental upgrades.
 
 ## Layout
 
-Mandate the use of the standard pre-commit, using that the command **Terraform fmt** is always run on Git commit. End of problem.
+Mandate the use of the standard pre-commits, this enforces the use of the command **Terraform fmt** on every Git commit. End of problem.
 
 ## Protecting Secrets
 
@@ -397,6 +409,8 @@ As yet to find a really satisfactory test approach or tool for testing Terraform
 - Run it for every change.
 - Tag the successful outcomes.
 - Destroy created resources
+
+Consider using Checkov and/or the Open Policy Agent.
 
 ## Tagging
 
@@ -488,25 +502,23 @@ Be it AWS, or whatever provider your using.
 
 Free and really quite good editor, with awesome extensions. Use the Extensions sync extension to maintain your [environment](https://gist.github.com/JamesWoolfenden/1a1ce363e6e6e5d2bcf321ca12ec3de2).
 
-[AWS-Vault](https://github.com/99designs/aws-vault)
-
-Helps with managing many AWS accounts at the CLI.
-
 [SAML2AWS](https://github.com/Versent/saml2aws)
 
 Generates temporary AWS credentials for AWS cmdline. Essential for running in Federated AD environment.
 
-[build-harness](https://github.com/cloudposse/build-harness)
+[Chekckov](https://checkov.io)
 
-A DevOps related collection of automated build processes, customised [Slalom version](https://github.com/JamesWoolfenden/build-harness)
+Checks your Terraform for security flaws.
 
 [Travis](https://travis-ci.com/) - or free for [open source projects](https://travis-ci.org/getting_started).
+
+[Circle](https://circleci.com/) a Leading CICD SAS tool that integrates with your codebase.
 
 There are many other good SAS CI/CD tools including Circle, GitLab and a few shockers.
 
 ## Caches
 
-Set a [plugin cache](https://www.terraform.io/docs/commands/cli-config.html). On a fat pipe you might not notice how quickly they download, but do setup your plugin-cache. It will save you time and stress.
+Set a [plugin cache](https://www.terraform.io/docs/commands/cli-config.html). On a fat pipe you might not notice how quickly they download, but do set-up your plugin-cache. It will save you time and stress.
 
 ### Contributors
 
