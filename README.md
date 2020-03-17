@@ -506,7 +506,7 @@ Free and really quite good editor, with awesome extensions. Use the Extensions s
 
 Generates temporary AWS credentials for AWS cmdline. Essential for running in Federated AD environment.
 
-[Chekckov](https://checkov.io)
+[Checkov](https://checkov.io)
 
 Checks your Terraform for security flaws.
 
