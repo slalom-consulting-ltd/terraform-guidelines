@@ -484,7 +484,7 @@ If so I'd either use or copy the naming module from the Cloud Posse
 
 [Terraform-docs](https://github.com/segmentio/terraform-docs)
 
-Run to help make your readmes, included with the build-harness.
+Run to help make your readmes.
 
 The [Pre-commit](https://pre-commit.com/) framework
 
@@ -492,7 +492,7 @@ So many different uses from linting to security, every git repo should have one.
 
 [Beyond-Compare](https://www.scootersoftware.com/) or equivalent
 
-A preference, for a comparison tool.
+A preference, for a comparison tool. This one is cross platform compatible.
 
 The Cli
 
