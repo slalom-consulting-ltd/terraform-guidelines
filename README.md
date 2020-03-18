@@ -303,10 +303,10 @@ Modules should be treated like applications services with a separate code reposi
 Each module should have a least one example included that demonstrates its usage. This example can be used as a test for that module, here its called **examplea**.
 
 ```bash
-examples/exampleAa
+examples/examplea
 ```
 
-This is an example for AWS codecommit that conforms <https://github.com/JamesWoolfenden/terraform-aws-codecommit>
+This is an example for using AWS codecommit that conforms <https://github.com/JamesWoolfenden/terraform-aws-codecommit>
 
 Use lowercase for all folder namesm, avoid spaces.
 
@@ -374,15 +374,15 @@ provider "aws" {
 ## State
 
 By default, Terraform stores the state locally in a file named `terraform.tfstate`; a local state means that any changes applied to the infrastructure will only be aligned with the developer's machine.<br/>
-For a complete beginner that could be a solution when trying out Terraform for the first time, but it certainly doesn't scale: if someone else wants to contribute to the code, things get misaligned very quickly, and what if the state file automagically disappears from the hard drive? You'll either destroy unexpectedly or lose control.
+For a complete beginner that could be a solution when trying out Terraform for the first time, but it certainly doesn't scale: if someone else wants to contribute to the code, things get misaligned very quickly, and what if the state file automagically disappears from the hard drive? You'll either destroy unexpectedly or lose control of your infrastructure.
 
-Adding the state file to the SCM might solve some of these problems, but is never recommended: secret values and passwords might be stored in the state file, and those should never be commited to version control. It would also rely on having commited and pull the latest version, which in practice is next to impossible.
+Adding the state file to the SCM might seem to solve some of these problems, but it is never recommended: secret values and passwords might be stored in the state file, and those should never be commited to version control. That approach also relies on having commited and pulled the very latest version, which in practice is next to impossible.
 
-The correct way is to use [remote states](https://www.terraform.io/docs/state/remote.html): in this case, the _state_ data is written to a remote data store, shared with all the team members and/or automation tools.<br/>
+The correct way is to use [remote states](https://www.terraform.io/docs/state/remote.html): in this case, the _state_ data is written to a remote data store and shared with all the team members and/or automation tools.<br/>
 Another important feature is [state locking](https://www.terraform.io/docs/state/locking.html): it stops the state file being corrupted by multiple writes, and it also indicates to users if they are attempting to update the same code.<br/>
-Furthermore, the concept of versioning comes handy: it allows to recover from file corruption and accidental upgrades.
+Furthermore, the concept of versioning comes handy: it allows to recover from file corruption and accidental upgrades, as well as giving traceable record of past configuration.
 
-There are many options for implementing remote states, popular choices include:
+There are many options for implementing remote state, popular choices include:
 
 - [S3 state bucket](https://www.terraform.io/docs/backends/types/s3.html) with Bucket Versioning and DynamoDB locking<br/>
   Quite common when using the AWS provider; a good template can be found [here](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15)
@@ -398,7 +398,7 @@ There are many options for implementing remote states, popular choices include:
 
 - ... even more [here](https://www.terraform.io/docs/backends/types/index.html)
 
-A good choice for multi-provider code is Terraform Cloud: one key element to keep in mind is that the sensible data part of the state will be stored on HashiCorp's servers.
+A good choice for multi-provider code is Terraform Cloud: one key element to keep in mind is that the sensitive data part of the state will be stored on HashiCorp's servers.
 
 For Terraform code that uses (primarily) one provider, a good option is to use the service-specific storage and locking method.
 
