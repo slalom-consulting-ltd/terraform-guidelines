@@ -373,11 +373,34 @@ provider "aws" {
 
 ## State
 
-Using remote state is not optional, use a [locking state bucket](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15) or use the free state management layer in Terraform Cloud/Enterprise. This new free tier Cloud is works but requires configuration.
+By default, Terraform stores the state locally in a file named `terraform.tfstate`; a local state means that any changes applied to the infrastructure will only be aligned with the developer's machine.<br/>
+That could be a solution when trying out Terraform for the first time, but it doesn't scale: if someone else wants to contribute to the code, things get misaligned very quickly, and what if the state file automagically disappears from the hard drive?
 
-Using Remote state is mandatory. There are many good choices here <https://www.terraform.io/docs/state/remote.html>, choose one that supports locking and versioning.
-Locking stops the state file being corrupted by multiple writes, it also indicates to users that they are attempting to update the same code.
-Versioning is there to recover from file corruption and accidental upgrades.
+Adding the state file to the SCM might solve some of these problems, but is not recommended: secret values and passwords might be stored in the state file, and those should never be versioned.
+
+The preferred way is to use [remote states](https://www.terraform.io/docs/state/remote.html): in this case, the _state_ data is written to a remote data store, shared with all the team members and/or automation tools.<br/>
+Another important feature is [state locking](https://www.terraform.io/docs/state/locking.html): it stops the state file being corrupted by multiple writes, and it also indicates to users if they are attempting to update the same code.<br/>
+Furthermore, the concept of versioning comes handy: it allows to recover from file corruption and accidental upgrades.
+
+There are several options for implementing remote states:
+
+- [S3 state bucket](https://www.terraform.io/docs/backends/types/s3.html) with Bucket Versioning and DynamoDB locking<br/>
+  Quite common when using the AWS provider; a good template can be found [here](https://registry.terraform.io/modules/JamesWoolfenden/statebucket/aws/0.0.15)
+
+- [GCS state bucket](https://www.terraform.io/docs/backends/types/gcs.html) with Object Versioning<br/>
+  Used mainly when creating the infrastructure for the Google Cloud Platform
+
+- [Azure state blob](https://www.terraform.io/docs/backends/types/azurerm.html)<br/>
+  Stores the state using Azure Blob Storage, which supports locking and consistency checking<br/>
+
+- [Terraform Cloud/Enterprise](https://www.terraform.io/docs/backends/types/remote.html#basic-configuration)<br/>
+  A good option for provider-agnostic storage of the state; requires configuring the [access credentials](https://www.terraform.io/docs/commands/cli-config.html#credentials) (token) via a `terraform.rc` file
+
+- ... even more [here](https://www.terraform.io/docs/backends/types/index.html)
+
+The usual choice for multi-provider code is Terraform Cloud: one key element to keep in mind is that the sensible data part of the state will be stored on HashiCorp's servers.
+
+For Terraform code that uses (primarily) one provider, a good option is to use the service-specific storage and locking method.
 
 ## Layout
 
@@ -471,7 +494,7 @@ is not necessarily helpful but
 tags={
 TEAM="Wilbur"
 Purpose="App"
-CostCode="4873}
+CostCode="4873"}
 ```
 
 Is better. Names you can't update, tags you can. The longer you make the resource names the more bugs you will find/make.
@@ -528,6 +551,10 @@ Set a [plugin cache](https://www.terraform.io/docs/commands/cli-config.html). On
 
 [![James Woolfenden][jameswoolfenden_avatar]][jameswoolfenden_homepage]<br/>[James Woolfenden][jameswoolfenden_homepage]
 
+[![Luca Zanconato][gherynos_avatar]][gherynos_homepage]<br/>[Luca Zanconato][gherynos_homepage]
+
 [jameswoolfenden_homepage]: https://github.com/jameswoolfenden
 [jameswoolfenden_avatar]: https://github.com/jameswoolfenden.png?size=150
+[gherynos_homepage]: https://github.com/gherynos
+[gherynos_avatar]: https://github.com/gherynos.png?size=130
 [logo]: https://gist.githubusercontent.com/JamesWoolfenden/5c457434351e9fe732ca22b78fdd7d5e/raw/15933294ae2b00f5dba6557d2be88f4b4da21201/slalom-logo.png

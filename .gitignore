@@ -7,3 +7,7 @@
 
 # .tfvars files
 *.tfvars
+
+# JetBrains IDE
+*.iml
+.idea
