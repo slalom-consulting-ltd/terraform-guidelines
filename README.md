@@ -503,6 +503,38 @@ Ok I get it some resources don't have tag attributes or you have some "Security"
 If so I'd either use or copy the naming module from the Cloud Posse
 [https://github.com/cloudposse/terraform-null-label](https://github.com/cloudposse/terraform-null-label).
 
+## Workspaces
+
+Confusingly this means 2 things in the Terraform worls
+
+### Old workspaces
+
+When should I use these workspaces, here is the hashicorp guidance:
+
+<https://www.terraform.io/docs/state/workspaces.html#when-to-use-multiple-workspaces>
+
+Clearly a reduced use case of just using for branch based changes, but i think even that case is weak:
+Workspace interpolation pretty much makes me want to say no to using. Workspaces aren't for separate environments and you have to code you vars and values special for using them.
+
+How not to use this:
+
+```cli
+bucket = "${terraform.workspace == "preprod" ? var.bucket_demo_preprod : var.bucket_demo}"
+```
+
+Not simple.
+
+<https://medium.com/@milescollier/handling-environmental-variables-in-terraform-workspaces-27d0278423df>
+
+I'm sure you could make this work.
+
+## New workspaces
+
+These workspaces are concerned with Terraform Cloud:
+<https://www.terraform.io/docs/cloud/guides/recommended-practices/part1.html>
+
+Obvious.
+
 ## Recommended Tools
 
 [Terraform-docs](https://github.com/segmentio/terraform-docs)
@@ -531,7 +563,7 @@ Generates temporary AWS credentials for AWS cmdline. Essential for running in Fe
 
 [Checkov](https://checkov.io)
 
-Checks your Terraform for security flaws.
+Checks your Terraform for security flaws. This should be part of basic toolset.
 
 [Travis](https://travis-ci.com/) - or free for [open source projects](https://travis-ci.org/getting_started).
 
@@ -539,9 +571,17 @@ Checks your Terraform for security flaws.
 
 There are many other good SAS CI/CD tools including Circle, GitLab and a few shockers.
 
+[AzureDevOps](https://azure.microsoft.com/en-gb/services/devops/)
+
+It maybe born/spawn of TFS but this tool has improved so much (I KNOW) to make it a viable option even for non Azure projects.
+
 [Hub](https://github.com/github/hub)
 
 Makes working with Github at the cli easy.
+
+[LocalStack](https://localstack.cloud/)
+
+This tool allows you to mock your AWS set-up, works with Terraform and the awscli - and use the awslocal wrapper.
 
 ## Caches
 
