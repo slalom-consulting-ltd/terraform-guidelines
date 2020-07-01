@@ -653,6 +653,8 @@ Makes working with Github at the cli easy.
 
 [LocalStack](https://localstack.cloud/)
 
+This tool allows you to mock your AWS set-up, works with Terraform and the awscli - and use the awslocal wrapper.
+
 [mingrammer/diagrams](https://diagrams.mingrammer.com/)
 
 Use this tool to visualise your designs as code.
@@ -660,8 +662,6 @@ Use this tool to visualise your designs as code.
 ![stateful architecture](https://diagrams.mingrammer.com/img/stateful_architecture_diagram.png)
 
 See the repo <https://github.com/mingrammer/diagrams>.
-
-This tool allows you to mock your AWS set-up, works with Terraform and the awscli - and use the awslocal wrapper.
 
 ## Caches
 
