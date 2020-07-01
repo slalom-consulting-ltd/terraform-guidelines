@@ -138,18 +138,90 @@ terraform.tfstate
 
 ```
 
+### .github/workflow/main.yml
+
+If your using Github you can add a basic CI workflow:
+
+This is a sample workflow, for the minimum validation of a module **main.yml**:
+
+```yml
+---
+name: Verify and Bump
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: "Terraform Init"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.28
+          tf_actions_subcommand: "init"
+          tf_actions_working_dir: "example/examplea"
+      - name: "Terraform Validate"
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.28
+          tf_actions_subcommand: "validate"
+          tf_actions_working_dir: "example/examplea"
+      - name: Test with Checkov
+        run: |
+          pip install checkov
+          checkov -d .
+  version:
+    name: versioning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: "true"
+    needs: build
+
+```
+
+### .terrraformignore
+
+If using Terraform cloud, the files not to upload to their cloud.
+
+```ini
+.terraform/
+*.exe
+*.tfstate
+*.backup
+*.bak
+*.info
+
+```
+
 ### .pre-commit-config.yaml
 
 Has a standard set of pre-commit hooks for working with Terraform and AWS. You'll need to install the pre-commit framework https://pre-commit.com/#install. And after that you need to add this file to your new repository **pre-commit-config.yaml**, in the root:
 
-```yml
+```yaml
 ---
 # yamllint disable rule:line-length
 default_language_version:
   python: python3
 repos:
   - repo: git://github.com/pre-commit/pre-commit-hooks
-    rev: v2.5.0
+    rev: v3.1.0
     hooks:
       - id: check-json
       - id: check-merge-conflict
@@ -179,11 +251,11 @@ repos:
     hooks:
       - id: shell-lint
   - repo: git://github.com/igorshubovych/markdownlint-cli
-    rev: v0.22.0
+    rev: v0.23.1
     hooks:
       - id: markdownlint
   - repo: git://github.com/adrienverge/yamllint
-    rev: v1.20.0
+    rev: v1.23.0
     hooks:
       - id: yamllint
         name: yamllint
@@ -192,7 +264,7 @@ repos:
         language: python
         types: [file, yaml]
   - repo: git://github.com/jameswoolfenden/pre-commit
-    rev: 0.1.23
+    rev: v0.1.33
     hooks:
       - id: terraform-fmt
       - id: checkov-scan
@@ -580,6 +652,14 @@ It maybe born/spawn of TFS but this tool has improved so much (I KNOW) to make i
 Makes working with Github at the cli easy.
 
 [LocalStack](https://localstack.cloud/)
+
+[mingrammer/diagrams](https://diagrams.mingrammer.com/)
+
+Use this tool to visualise your designs as code.
+
+![stateful architecture](https://diagrams.mingrammer.com/img/stateful_architecture_diagram.png)
+
+See the repo <https://github.com/mingrammer/diagrams>.
 
 This tool allows you to mock your AWS set-up, works with Terraform and the awscli - and use the awslocal wrapper.
 
