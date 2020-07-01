@@ -433,7 +433,7 @@ As yet to find a really satisfactory test approach or tool for testing Terraform
 - Tag the successful outcomes.
 - Destroy created resources
 
-Consider using Checkov and/or the Open Policy Agent.
+Use Checkov, Consider using the Open Policy Agent.
 
 ## Tagging
 
@@ -505,7 +505,7 @@ If so I'd either use or copy the naming module from the Cloud Posse
 
 ## Workspaces
 
-Confusingly this means 2 things in the Terraform worls
+Confusingly this means 2 things in the Terraform world.
 
 ### Old workspaces
 
@@ -528,7 +528,7 @@ Not simple.
 
 I'm sure you could make this work.
 
-## New workspaces
+### New workspaces
 
 These workspaces are concerned with Terraform Cloud:
 <https://www.terraform.io/docs/cloud/guides/recommended-practices/part1.html>
