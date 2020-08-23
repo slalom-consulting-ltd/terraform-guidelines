@@ -363,7 +363,7 @@ This is the standard file for setting your variables in, and is automatically pi
 
 For defining your variables and setting default values. Each variable should define its type and have an adequate description.
 Also contains a map variable common_tags, which should be extended and used on every taggable object.  Use descriptions.
- 
+
 As of Terraform 0.13 Custom Input validation for variables has arrived.
 
 Ok so? This means we finally has some control for Testing and Validation.
