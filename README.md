@@ -477,7 +477,7 @@ Create a file called **terraform.tf** in your template:
 
 ```terraform
 terraform {
-    required_version="0.12.21"
+    required_version="~> 0.13.0"
 }
 ```
 
@@ -506,7 +506,7 @@ Using shiny things is great, what's not great is code that worked yesterday brea
 ```terraform
 provider "aws" {
   region  = "eu-west-1"
-  version = "2.52.0"
+  version = "3.00.0"
 }
 ```
 
