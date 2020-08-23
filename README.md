@@ -196,7 +196,7 @@ jobs:
 
 ```
 
-### .terrraformignore
+### .terraformignore
 
 If using Terraform cloud, the files not to upload to their cloud.
 
@@ -221,7 +221,7 @@ default_language_version:
   python: python3
 repos:
   - repo: git://github.com/pre-commit/pre-commit-hooks
-    rev: v3.1.0
+    rev: v3.2.0
     hooks:
       - id: check-json
       - id: check-merge-conflict
@@ -235,7 +235,7 @@ repos:
       - id: detect-aws-credentials
       - id: detect-private-key
   - repo: git://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.1.7
+    rev: v1.1.9
     hooks:
       - id: forbid-tabs
         exclude_types:
@@ -251,11 +251,11 @@ repos:
     hooks:
       - id: shell-lint
   - repo: git://github.com/igorshubovych/markdownlint-cli
-    rev: v0.23.1
+    rev: v0.23.2
     hooks:
       - id: markdownlint
   - repo: git://github.com/adrienverge/yamllint
-    rev: v1.23.0
+    rev: v1.24.2
     hooks:
       - id: yamllint
         name: yamllint
@@ -292,7 +292,6 @@ A helper file. This is just to make like easier for you. Problematic if you are 
 ```makefile
 #Makefile
 ifdef OS
-   RM   = $(powershell  -noprofile rm .\.terraform\modules -force -recurse)
    BLAT = $(powershell  -noprofile rm .\.terraform\ -force -recurse)
 else
    ifeq ($(shell uname), Linux)
@@ -309,13 +308,15 @@ init:
    $(RM)
    terraform init -reconfigure
 
-plan: init
-  terraform plan -refresh=true
+plan:
+   terraform plan -refresh=true
 
 p:
-  terraform plan -refresh=true | landscape
+   terraform plan -refresh=true
 
-build: init
+apply: build
+
+build:
    terraform apply -auto-approve
 
 check: init
@@ -328,8 +329,8 @@ docs:
    terraform-docs md . > README.md
 
 valid:
-   tflint
    terraform fmt -check=true -diff=true
+   checkov -d . --external-checks-dir ../../checkov
 
 target:
    @read -p "Enter Module to target:" MODULE;
@@ -362,6 +363,72 @@ This is the standard file for setting your variables in, and is automatically pi
 
 For defining your variables and setting default values. Each variable should define its type and have an adequate description.
 Also contains a map variable common_tags, which should be extended and used on every taggable object.  Use descriptions.
+ 
+As of Terraform 0.13 Custom Input validation for variables has arrived.
+
+Ok so? This means we finally has some control for Testing and Validation.
+
+You can now automatically add tests so that your input values are set correctly, for your templates and modules, it a basic boundary check.
+
+The minimal basics are explained here: https://www.terraform.io/docs/configuration/variables.html this is a very basic explanation.. sigh.
+
+To see what really possible you need to combine these conditions with the functions that are already available in Terraform:
+
+#### Check to see value is not null
+
+```terraform
+variable "config_file" {
+  type        = string
+  description = ""
+  validation {
+    condition     = length(var.config_file) > 0
+    error_message = "This value cannot be an empty string."
+  }
+}
+```
+
+#### Check to see item is set to valid options only
+
+```terraform
+variable "log_level" {
+  type        = string
+  description = "The Log level value must be one of 'DEBUG', 'INFO','WARNING', 'ERROR','CRITICAL'."
+
+  validation {
+    condition     = can(regex("DEBUG|INFO|WARNING|ERROR|CRITICAL", var.log_level))
+    error_message = "The Value must be one of 'DEBUG', 'INFO','WARNING', 'ERROR','CRITICAL'."
+  }
+}
+```
+
+or
+
+```terraform
+variable "tracing_mode" {
+  type        = string
+  description = "x-rays settings"
+  default     = "Active"
+
+  validation {
+    condition     = contains(["PassThrough","Active"], var.tracing_mode)
+    error_message = "Tracing mode can only be PassThrough or Active."
+  }
+}
+```
+
+#### Check to see variable is formatted correctly
+
+```terraform
+variable "runtime" {
+  type        = string
+  description = "The lambda runtime"
+  default     = "python2.7"
+  validation {
+    condition     = length(var.runtime) > 5 && substr(var.runtime, 0, 6) == "python"
+    error_message = "This uses python so its value need to start with \"python\"."
+  }
+}
+```
 
 ### .dependsabot/config.yml
 
